@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>کارت دعوت عروسی فاطمه و علی</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    
+    <style>
+        @font-face {
+            font-family: 'IranNastaliq';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/iran-nastaliq-font@v3.0.0/dist/IranNastaliq.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --bg-center: #8da383;
+            --bg-edge: #5f7058;
+            --text-color: #fcfcfc;
+            --arch-bg: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            background: 
+                linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.1)),
+                url("https://www.transparenttextures.com/patterns/beige-paper.png"),
+                radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-edge) 100%);
+            background-blend-mode: multiply, overlay, normal;
+            font-family: 'IranNastaliq', serif;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100%;
+            /* تغییر مهم: اسکرول عمودی آزاد شد */
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.3); 
+        }
+
+        /* --- صفحه ورود --- */
+        #entry-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease, visibility 1.5s;
+        }
+
+        .initials {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.4);
+            animation: pulse 3s infinite ease-in-out;
+            text-align: center;
+        }
+
+        .enter-btn {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.6);
+            padding: 10px 30px;
+            font-family: 'IranNastaliq', serif;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- کانتینر اصلی --- */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1s ease;
+            /* تغییر مهم: ارتفاع متناسب با محتوا باشد نه ثابت */
+            min-height: 100vh; 
+            justify-content: flex-start; /* از بالا شروع شود */
+            padding-top: 50px; /* فاصله از بالا */
+            padding-bottom: 80px; /* فاصله از پایین برای دکمه موزیک */
+        }
+
+        .container.active {
+            opacity: 1;
+        }
+
+        /* --- عکس‌های تزیینی --- */
+        .turn-white {
+            filter: brightness(0) invert(1);
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .top-wedding-art {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px; /* کوچکتر شد */
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .bottom-flower {
+            bottom: -20px;
+            left: -30px;
+            width: 200px;
+            transform: rotate(20deg);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .start-anim .top-wedding-art,
+        .start-anim .bottom-flower {
+            animation: fadeInArt 3s ease forwards;
+        }
+
+        /* --- گالری فشرده‌تر --- */
+        .gallery {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px; /* فاصله کم شد */
+            height: 160px; /* ارتفاع کمتر شد */
+            align-items: flex-start;
+            position: relative;
+            z-index: 10;
+            margin-top: 20px; /* فاصله کم شد */
+            width: 100%;
+        }
+
+        .arch-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 28%;
+        }
+
+        .arch-img {
+            width: 100%;
+            max-width: 80px;
+            height: 110px; /* عکس‌ها کمی کوچکتر */
+            object-fit: cover;
+            border-radius: 100px 100px 0 0;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            background-color: var(--arch-bg);
+            opacity: 0;
+            filter: sepia(20%) contrast(110%); 
+        }
+
+        .start-anim .arch-img {
+            animation: imageEnter 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        
+        .start-anim .arch-card:nth-child(2) .arch-img { animation-delay: 0.5s; }
+        .start-anim .arch-card:nth-child(3) .arch-img { animation-delay: 2.0s; }
+        .start-anim .arch-card:nth-child(1) .arch-img { animation-delay: 3.5s; }
+
+        .arch-date {
+            font-family: 'Lalezar', cursive;
+            font-size: 1.8rem; /* فونت تاریخ کوچکتر */
+            margin-top: 5px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            color: #fff;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        .start-anim .arch-date {
+            animation: dateSlideDown 2.5s ease forwards;
+            animation-delay: 5.0s;
+        }
+
+        /* --- متن‌ها فشرده‌تر --- */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px; /* فاصله بین خطوط متن خیلی کم شد */
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 5;
+            width: 100%;
+        }
+        
+        .seq-text {
+            opacity: 0; 
+            transform: translateY(15px);
+        }
+
+        .start-anim .seq-text {
+            animation: textFadeUp 2.5s ease forwards;
+        }
+
+        .start-anim .text-1 { animation-delay: 6.5s; }
+        .start-anim .text-2 { animation-delay: 8.5s; }
+        .start-anim .text-3 { animation-delay: 10.5s; }
+        .start-anim .text-4 { animation-delay: 12.5s; }
+        .start-anim .text-5 { animation-delay: 14.5s; }
+
+        .header-text { font-size: 1.3rem; margin-bottom: 0; color: #e0e0e0; }
+        
+        .couple-names {
+            font-size: 3rem; /* سایز اسم متعادل شد */
+            margin: 0;
+            line-height: 1.4;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.4);
+            white-space: nowrap;
+        }
+
+        .poem { font-size: 1.5rem; margin-bottom: 0; opacity: 0; }
+        .details { font-size: 1.4rem; line-height: 1.6; opacity: 0; }
+        
+        .location-time {
+            margin-top: 15px; /* فاصله از بالا کم شد */
+            background: rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 10px; /* پدینگ کم شد */
+            font-size: 1.4rem;
+            line-height: 1.6;
+            border-radius: 15px;
+            width: 95%;
+            backdrop-filter: blur(3px);
+            opacity: 0;
+        }
+        
+        .location-name { font-size: 1.8rem; margin-top: 5px; color: #fff; }
+
+        /* Keyframes */
+        @keyframes fadeInArt {
+            from { opacity: 0; }
+            to { opacity: 0.3; }
+        }
+        @keyframes imageEnter {
+            0% { opacity: 0; transform: scale(0.9); filter: blur(5px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0) sepia(20%); }
+        }
+        @keyframes dateSlideDown {
+            0% { opacity: 0; transform: translateY(-15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes textFadeUp {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(2px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(0.95); }
+        }
+
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+        
+        .start-anim .music-btn {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="entry-screen">
+        <div class="initials">فاطمه و علی</div>
+        <button class="enter-btn" id="enter-btn">گشودن کارت دعوت</button>
+    </div>
+
+    <div class="container" id="main-container">
+        
+        <img 
+            src="https://www.freeiconspng.com/uploads/calligraphy-divider-png-10.png" 
+            class="top-wedding-art turn-white" 
+            alt="Wedding Decoration"
+        >
+
+        <img 
+            src="https://www.freeiconspng.com/uploads/rose-flower-png-transparent-2.png" 
+            class="bottom-flower turn-white" 
+            alt="Flower Decoration"
+        >
+
+        <div class="gallery">
+            <div class="arch-card">
+                <img src="https://picsum.photos/200/300?grayscale" alt="Right Img" class="arch-img">
+                <span class="arch-date">۱۴</span>
+            </div>
+            <div class="arch-card">
+                <img src="https://picsum.photos/200/300?grayscale" alt="Center Img" class="arch-img">
+                <span class="arch-date">۱۱</span>
+            </div>
+            <div class="arch-card">
+                <img src="https://picsum.photos/200/300?grayscale" alt="Left Img" class="arch-img">
+                <span class="arch-date">۰۴</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="header-text seq-text text-1">به نامش و در پناهش</div>
+            <h1 class="couple-names seq-text text-2">فاطمه و علی</h1>
+            
+            <div class="poem seq-text text-3">و عشق پایان ندارد...</div>
+            <div class="details seq-text text-4">
+                حضورتان یادگار است و خاطره‌ای ماندگار<br>
+                فرجی و مهدوی نیا
+            </div>
+            <div class="location-time seq-text text-5">
+                 سه شنبه ۱۴ بهمن  ۱۴۰۴ <br>
+               از ساعت ۱۷<br>
+                <div class="location-name">تالار پذیرایی اشتهارد</div>
+            </div>
+        </div>
+
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    
+    <button class="music-btn" onclick="toggleMusic()">🎵</button>
+
+    <script>
+        const entryScreen = document.getElementById('entry-screen');
+        const enterBtn = document.getElementById('enter-btn');
+        const mainContainer = document.getElementById('main-container');
+        const music = document.getElementById('bg-music');
+        let isPlaying = false;
+
+        enterBtn.addEventListener('click', () => {
+            music.play().then(() => {
+                isPlaying = true;
+                document.querySelector('.music-btn').innerHTML = '🎵';
+            }).catch(e => console.log(e));
+
+            entryScreen.style.opacity = '0';
+            entryScreen.style.visibility = 'hidden';
+            mainContainer.classList.add('active');
+
+            setTimeout(() => {
+                document.body.classList.add('start-anim');
+                entryScreen.remove();
+            }, 500);
+        });
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                document.querySelector('.music-btn').innerHTML = '🔇';
+            } else {
+                music.play();
+                document.querySelector('.music-btn').innerHTML = '🎵';
+            }
+            isPlaying = !isPlaying;
+        }
+    </script>
+</body>
+</html>
